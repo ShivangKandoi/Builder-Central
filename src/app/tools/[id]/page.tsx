@@ -636,12 +636,30 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
                 
                 {/* CTA buttons - more aesthetically pleasing */}
                 <div className="p-6 bg-muted/40 border-t border-border/30">
-                  <Link href={tool.deployedUrl || "#"} target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      <span>Visit Website</span>
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full"
+                    onClick={() => {
+                      // Get the URL from the tool
+                      let url = tool.deployedUrl;
+                      
+                      // Only add the protocol if the URL is completely missing it and it's necessary for navigation
+                      if (url && !url.match(/^[a-zA-Z]+:\/\//)) {
+                        // Check if the URL already starts with a domain-like pattern
+                        if (url.match(/^www\./i) || url.includes('.')) {
+                          // Only add https:// for domain-like URLs
+                          url = 'https://' + url;
+                        }
+                      }
+                      
+                      // Open in a new tab
+                      if (url) {
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      }
+                    }}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    <span>Visit Website</span>
+                  </Button>
                   
                   {tool.repositoryUrl && (
                     <Link href={tool.repositoryUrl} target="_blank" rel="noopener noreferrer" className="block mt-3">

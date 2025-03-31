@@ -638,12 +638,30 @@ function ToolCard({ tool, isFavorite = false }: {
             variant="ghost" 
             size="sm" 
             className="h-7 w-7 p-0"
-            asChild
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              // Get the URL from the tool
+              let url = tool.deployedUrl;
+              
+              // Only add the protocol if the URL is completely missing it and it's necessary for navigation
+              if (url && !url.match(/^[a-zA-Z]+:\/\//)) {
+                // Check if the URL already starts with a domain-like pattern
+                if (url.match(/^www\./i) || url.includes('.')) {
+                  // Only add https:// for domain-like URLs
+                  url = 'https://' + url;
+                }
+              }
+              
+              // Open in a new tab
+              if (url) {
+                window.open(url, '_blank', 'noopener,noreferrer');
+              }
+            }}
           >
-            <Link href={tool.deployedUrl} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-3.5 w-3.5" />
-              <span className="sr-only">Visit</span>
-            </Link>
+            <ExternalLink className="h-3.5 w-3.5" />
+            <span className="sr-only">Visit</span>
           </Button>
           
           <Button 

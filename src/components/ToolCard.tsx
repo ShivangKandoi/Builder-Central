@@ -82,10 +82,16 @@ export default function ToolCard({
     e.preventDefault();
     e.stopPropagation();
     
-    // Fix: Ensure the URL has a protocol, defaulting to https if missing
+    // Get the URL from the tool
     let url = tool.deployedUrl;
-    if (url && !url.match(/^https?:\/\//i)) {
-      url = 'https://' + url;
+    
+    // Only add the protocol if the URL is completely missing it and it's necessary for navigation
+    if (url && !url.match(/^[a-zA-Z]+:\/\//)) {
+      // Check if the URL already starts with a domain-like pattern
+      if (url.match(/^www\./i) || url.includes('.')) {
+        // Only add https:// for domain-like URLs
+        url = 'https://' + url;
+      }
     }
     
     // Open in a new tab

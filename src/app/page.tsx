@@ -251,7 +251,23 @@ export default function Home() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      window.open(tool.deployedUrl, '_blank', 'noopener,noreferrer');
+                      
+                      // Get the URL from the tool
+                      let url = tool.deployedUrl;
+                      
+                      // Only add the protocol if the URL is completely missing it and it's necessary for navigation
+                      if (url && !url.match(/^[a-zA-Z]+:\/\//)) {
+                        // Check if the URL already starts with a domain-like pattern
+                        if (url.match(/^www\./i) || url.includes('.')) {
+                          // Only add https:// for domain-like URLs
+                          url = 'https://' + url;
+                        }
+                      }
+                      
+                      // Open in a new tab
+                      if (url) {
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      }
                     }}
                     className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center"
                   >
